@@ -1,4 +1,11 @@
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, MoreHorizontal, Search } from 'lucide-react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+  MoreHorizontal,
+  Search
+} from 'lucide-react';
 
 export function AttendeeList() {
   return (
@@ -6,12 +13,12 @@ export function AttendeeList() {
       <div className="flex items-center gap-5">
         <h1 className="text-2xl font-bold">Participantes</h1>
 
-        <div className=" flex w-72 px-3 py-1.5 border border-white/10 rounded-lg text-sm gap-3">
-          <Search className="size-4 text-emerald-300" />
+        <div className="flex w-72 px-3 py-1.5 border border-white/10 rounded-lg text-sm gap-3 items-center">
+          <Search className="size-6 text-emerald-300" />
           <input
             type="text"
             placeholder="Buscar participante"
-            className="w-full bg-transparent"
+            className="w-full bg-transparent border-none"
           />
         </div>
       </div>
@@ -22,7 +29,7 @@ export function AttendeeList() {
           <thead>
             <tr className='border-b border-white/10'>
               <th className="py-3 px-4 text-sm font-semibold text-left">
-                <input type='checkbox' />
+                <input type='checkbox' className='size-4 bg-black/20 rounded border-white/10 accent-orange-400' />
               </th>
               <th style={{ width: 64 }} className="py-3 px-4 text-sm font-semibold text-left">Código</th>
               <th className="py-3 px-4 text-sm font-semibold text-left">Participante</th>
@@ -35,9 +42,9 @@ export function AttendeeList() {
           <tbody>
 
             {Array.from({ length: 10 }).map((_, i) => (
-              <tr key={i} className='border-b border-white/10'>
+              <tr key={i} className='border-b border-white/10 hover:bg-white/5'>
                 <td className="py-3 px-4 text-sm">
-                  <input type='checkbox' />
+                  <input type='checkbox' className='size-4 bg-black/20 rounded border-white/10 accent-orange-400' />
                 </td>
                 <td className="py-3 px-4 text-sm">0325</td>
                 <td className='flex flex-col gap-1'>
