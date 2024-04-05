@@ -6,6 +6,7 @@ import {
   MoreHorizontal,
   Search
 } from 'lucide-react';
+import { IconButton } from './icon-button';
 
 export function AttendeeList() {
   return (
@@ -53,7 +54,9 @@ export function AttendeeList() {
                 </td>
                 <td className="py-3 px-4 text-sm ">7 dias atrás</td>
                 <td className="py-3 px-4 text-sm ">3 dias atrás</td>
-                <button className='bg-black/20 border-white/10 rounded-md p-1.5'>{<MoreHorizontal className='size-4' />}</button>
+                <IconButton transparent>
+                  {<MoreHorizontal className='size-4' />}
+                </IconButton>
               </tr>
             ))}
 
@@ -69,18 +72,22 @@ export function AttendeeList() {
                 <div className='inline-flex items-center gap-8'>
                   Página 1 de 23
                   <div className='flex gap-1.5'>
-                    <button className='bg-black/20 border border-white/10 rounded-md p-1.5'>
+
+                    <IconButton>
                       <ChevronsLeft />
-                    </button>
-                    <button className='bg-black/20 border border-white/10 rounded-md p-1.5'>
+                    </IconButton>
+
+                    <IconButton>
                       <ChevronLeft />
-                    </button>
-                    <button className='bg-black/20 border border-white/10 rounded-md p-1.5'>
+                    </IconButton>
+
+                    <IconButton>
                       <ChevronRight />
-                    </button>
-                    <button className='bg-black/20 border border-white/10 rounded-md p-1.5'>
+                    </IconButton>
+
+                    <IconButton>
                       <ChevronsRight />
-                    </button>
+                    </IconButton>
 
                   </div>
                 </div>
