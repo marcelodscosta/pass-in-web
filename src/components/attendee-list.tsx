@@ -6,12 +6,20 @@ import {
   MoreHorizontal,
   Search
 } from 'lucide-react';
+import { ChangeEvent, useState } from 'react';
 import { IconButton } from './icon-button';
 import { Table } from './table/table';
 import { TableCell } from './table/table-cell';
 import { TableHeader } from './table/table-header';
 
 export function AttendeeList() {
+
+  const [search, setSearch] = useState('');
+
+  function onSearchInputValue({ target: { value } }: ChangeEvent<HTMLInputElement>) {
+    setSearch(value);
+  };
+
   return (
     <div className='flex flex-col gap-4'>
       <div className="flex items-center gap-5">
@@ -23,6 +31,7 @@ export function AttendeeList() {
             type="text"
             placeholder="Buscar participante"
             className="w-full bg-transparent border-none"
+            onChange={onSearchInputValue}
           />
         </div>
       </div>
