@@ -7,7 +7,7 @@ export function TableCell({ ...rest }: TableCellProps) {
   return (
     <td
       {...rest}
-      className={twMerge("py-3 px-4 text-sm", rest.className)}
+      className={twMerge("py-3 px-4 text-sm text-zinc-300", rest.className)}
     />
   );
 };

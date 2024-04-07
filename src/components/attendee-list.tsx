@@ -12,13 +12,42 @@ import { Table } from './table/table';
 import { TableCell } from './table/table-cell';
 import { TableHeader } from './table/table-header';
 
+import { attendees } from "../data/attendees";
+
+import dayjs from 'dayjs';
+import 'dayjs/locale/pt-br';
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+dayjs.extend(relativeTime);
+dayjs.locale('pt-br');
+
+const totalPages = Math.ceil(attendees.length / 10);
+
 export function AttendeeList() {
 
   const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
 
   function onSearchInputValue({ target: { value } }: ChangeEvent<HTMLInputElement>) {
     setSearch(value);
   };
+
+  const goToNextPage = () => {
+    setPage(page + 1);
+  };
+
+  const goToPrevieusPage = () => {
+    setPage(page - 1);
+  };
+
+  const goToFirstPage = () => {
+    setPage(1)
+  }
+
+
+  const goToLastPage = () => {
+    setPage(totalPages)
+  }
 
   return (
     <div className='flex flex-col gap-4'>
@@ -59,21 +88,25 @@ export function AttendeeList() {
 
         <tbody>
 
-          {Array.from({ length: 10 }).map((_, i) => (
-            <tr key={i} className='border-b border-white/10 hover:bg-white/5'>
+          {attendees.slice((page - 1) * 10, page * 10).map(({ id, name, email, createAt, chekedInAt }) => (
+            <tr key={id} className='border-b border-white/10 hover:bg-white/5'>
               <TableCell>
                 <input type='checkbox' className='size-4 bg-black/20 rounded border-white/10 accent-orange-400' />
               </TableCell>
-              <TableCell>0325</TableCell>
+              <TableCell>{id}</TableCell>
               <TableCell>
-                <span className='font-semibold text-white'>Marcelo Costa</span>
-                <span>marcelodscosta@yahoo.com.br</span>
+                <div className='flex flex-col gap-1'>
+                  <span className='font-semibold text-white'>{name}</span>
+                  <span>{email}</span>
+                </div>
               </TableCell>
-              <TableCell>7 dias atrás</TableCell>
-              <TableCell>3 dias atrás</TableCell>
-              <IconButton transparent>
-                {<MoreHorizontal className='size-4' />}
-              </IconButton>
+              <TableCell>{dayjs().to(createAt)}</TableCell>
+              <TableCell>{dayjs().to(chekedInAt)}</TableCell>
+              <TableCell>
+                <IconButton transparent>
+                  {<MoreHorizontal className='size-4' />}
+                </IconButton>
+              </TableCell>
             </tr>
           ))}
 
@@ -82,27 +115,27 @@ export function AttendeeList() {
         <tfoot>
           <tr >
             <td colSpan={3} className='py-3 px-4 text-sm text-zinc-300'>
-              Mostrando 10 de 228 itens
+              Mostrando 10 de {attendees.length} itens
             </td>
 
             <td colSpan={3} className='py-3 px-4 text-sm text-zinc-300 text-right'>
               <div className='inline-flex items-center gap-8'>
-                Página 1 de 23
+                Página {page} de {totalPages}
                 <div className='flex gap-1.5'>
 
-                  <IconButton>
+                  <IconButton onClick={goToFirstPage} disabled={page === 1}>
                     <ChevronsLeft />
                   </IconButton>
 
-                  <IconButton>
+                  <IconButton onClick={goToPrevieusPage} disabled={page === 1}>
                     <ChevronLeft />
                   </IconButton>
 
-                  <IconButton>
+                  <IconButton onClick={goToNextPage} disabled={page === totalPages}>
                     <ChevronRight />
                   </IconButton>
 
-                  <IconButton>
+                  <IconButton onClick={goToLastPage} disabled={page === totalPages}>
                     <ChevronsRight />
                   </IconButton>
 
