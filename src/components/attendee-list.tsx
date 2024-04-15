@@ -36,7 +36,13 @@ type TAttendees = {
 export function AttendeeList() {
 
   const [search, setSearch] = useState('');
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(() => {
+    const url = new URL(window.location.toString());
+    if (url.searchParams.has("page")) {
+      return Number(url.searchParams.get("page"));
+    }
+    return 1
+  });
   const [attendee, setAttendee] = useState<TAttendees>()
   const [total, setTotal] = useState(0);
 
@@ -44,20 +50,20 @@ export function AttendeeList() {
 
   function onSearchInputValue({ target: { value } }: ChangeEvent<HTMLInputElement>) {
     setSearch(value);
-    setPage(1);
+    setCurrentPage(1);
   };
 
   const goToNextPage = () => {
-    setPage(page + 1);
+    setCurrentPage(page + 1);
   };
   const goToPrevieusPage = () => {
-    setPage(page - 1);
+    setCurrentPage(page - 1);
   };
   const goToFirstPage = () => {
-    setPage(1)
+    setCurrentPage(1)
   }
   const goToLastPage = () => {
-    setPage(totalPages)
+    setCurrentPage(totalPages)
   }
 
   useEffect(() => {
@@ -78,6 +84,16 @@ export function AttendeeList() {
       });
 
   }, [page, search])
+
+  function setCurrentPage(page: number) {
+    const url = new URL(window.location.toString());
+
+    url.searchParams.set('page', String(page))
+
+    window.history.pushState({}, "", url);
+
+    setPage(page)
+  }
 
 
   return (
