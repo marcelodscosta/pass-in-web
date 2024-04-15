@@ -12,7 +12,6 @@ import { Table } from './table/table';
 import { TableCell } from './table/table-cell';
 import { TableHeader } from './table/table-header';
 
-import { attendees } from "../data/attendees";
 
 import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br';
@@ -31,15 +30,17 @@ type TAttendee = {
 
 type TAttendees = {
   attendees: TAttendee[],
+  total: number,
 };
-
-const totalPages = Math.ceil(attendees.length / 10);
 
 export function AttendeeList() {
 
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [attendee, setAttendee] = useState<TAttendees>()
+  const [total, setTotal] = useState(0);
+
+  const totalPages = Math.ceil(total / 10);
 
   function onSearchInputValue({ target: { value } }: ChangeEvent<HTMLInputElement>) {
     setSearch(value);
@@ -59,8 +60,13 @@ export function AttendeeList() {
   }
 
   useEffect(() => {
-    fetch("http://localhost:3333/events/9e9bd979-9d10-4915-b339-3786b1634f33/attendees")
-      .then((response) => response.json()).then((data: TAttendees) => setAttendee(data));
+    fetch(`http://localhost:3333/events/9e9bd979-9d10-4915-b339-3786b1634f33/attendees?pageIndex=${page - 1}`)
+      .then((response) => response.json()).then((data: TAttendees) => {
+        setAttendee(data)
+        setTotal(data.total)
+      }
+
+      );
 
   }, [page])
 
@@ -135,7 +141,7 @@ export function AttendeeList() {
         <tfoot>
           <tr >
             <td colSpan={3} className='py-3 px-4 text-sm text-zinc-300'>
-              Mostrando 10 de {attendees.length} itens
+              Mostrando {attendee?.attendees.length} de {total} itens
             </td>
 
             <td colSpan={3} className='py-3 px-4 text-sm text-zinc-300 text-right'>
