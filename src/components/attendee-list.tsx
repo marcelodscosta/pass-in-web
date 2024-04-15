@@ -44,6 +44,7 @@ export function AttendeeList() {
 
   function onSearchInputValue({ target: { value } }: ChangeEvent<HTMLInputElement>) {
     setSearch(value);
+    setPage(1);
   };
 
   const goToNextPage = () => {
@@ -60,15 +61,23 @@ export function AttendeeList() {
   }
 
   useEffect(() => {
-    fetch(`http://localhost:3333/events/9e9bd979-9d10-4915-b339-3786b1634f33/attendees?pageIndex=${page - 1}`)
+
+    const url = new URL("http://localhost:3333/events/9e9bd979-9d10-4915-b339-3786b1634f33/attendees");
+
+    url.searchParams.set('pageIndex', String(page - 1));
+
+    if (search.length > 2) {
+      url.searchParams.set('query', search);
+
+    }
+
+    fetch(url)
       .then((response) => response.json()).then((data: TAttendees) => {
         setAttendee(data)
         setTotal(data.total)
-      }
+      });
 
-      );
-
-  }, [page])
+  }, [page, search])
 
 
   return (
@@ -76,12 +85,12 @@ export function AttendeeList() {
       <div className="flex items-center gap-5">
         <h1 className="text-2xl font-bold">Participantes</h1>
 
-        <div className="flex w-72 px-3 py-1.5 border border-white/10 rounded-lg text-sm gap-3 items-center">
+        <div className="flex w-72 px-3 py-1.5 border border-white/10 rounded-lg text-sm gap-3 items-center ring-0">
           <Search className="size-6 text-emerald-300" />
           <input
             type="text"
             placeholder="Buscar participante"
-            className="w-full bg-transparent border-none"
+            className="w-full bg-transparent border-none focus:ring-0"
             onChange={onSearchInputValue}
           />
         </div>
