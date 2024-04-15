@@ -6,7 +6,7 @@ import {
   MoreHorizontal,
   Search
 } from 'lucide-react';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { IconButton } from './icon-button';
 import { Table } from './table/table';
 import { TableCell } from './table/table-cell';
@@ -21,12 +21,25 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 dayjs.locale('pt-br');
 
+type TAttendee = {
+  id: number,
+  name: string,
+  email: string,
+  createdAt: string,
+  checkedInAt: string | null,
+};
+
+type TAttendees = {
+  attendees: TAttendee[],
+};
+
 const totalPages = Math.ceil(attendees.length / 10);
 
 export function AttendeeList() {
 
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
+  const [attendee, setAttendee] = useState<TAttendees>()
 
   function onSearchInputValue({ target: { value } }: ChangeEvent<HTMLInputElement>) {
     setSearch(value);
@@ -35,19 +48,22 @@ export function AttendeeList() {
   const goToNextPage = () => {
     setPage(page + 1);
   };
-
   const goToPrevieusPage = () => {
     setPage(page - 1);
   };
-
   const goToFirstPage = () => {
     setPage(1)
   }
-
-
   const goToLastPage = () => {
     setPage(totalPages)
   }
+
+  useEffect(() => {
+    fetch("http://localhost:3333/events/9e9bd979-9d10-4915-b339-3786b1634f33/attendees")
+      .then((response) => response.json()).then((data: TAttendees) => setAttendee(data));
+
+  }, [page])
+
 
   return (
     <div className='flex flex-col gap-4'>
@@ -88,7 +104,8 @@ export function AttendeeList() {
 
         <tbody>
 
-          {attendees.slice((page - 1) * 10, page * 10).map(({ id, name, email, createAt, chekedInAt }) => (
+          {attendee?.attendees.map(({ id, name, email, createdAt, checkedInAt }) => (
+
             <tr key={id} className='border-b border-white/10 hover:bg-white/5'>
               <TableCell>
                 <input type='checkbox' className='size-4 bg-black/20 rounded border-white/10 accent-orange-400' />
@@ -100,8 +117,11 @@ export function AttendeeList() {
                   <span>{email}</span>
                 </div>
               </TableCell>
-              <TableCell>{dayjs().to(createAt)}</TableCell>
-              <TableCell>{dayjs().to(chekedInAt)}</TableCell>
+              <TableCell>{dayjs().to(createdAt)}</TableCell>
+              <TableCell>{
+                checkedInAt === null
+                  ? <span className='text-zinc-500'>Não fez Check-in</span>
+                  : dayjs().to(checkedInAt)}</TableCell>
               <TableCell>
                 <IconButton transparent>
                   {<MoreHorizontal className='size-4' />}
